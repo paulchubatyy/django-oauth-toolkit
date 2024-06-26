@@ -29,7 +29,6 @@ from oauthlib.openid import RequestValidator
 
 from .exceptions import FatalClientError
 from .models import (
-    AbstractApplication,
     get_access_token_model,
     get_application_model,
     get_grant_model,
@@ -43,20 +42,6 @@ from .utils import get_timezone
 
 log = logging.getLogger("oauth2_provider")
 
-GRANT_TYPE_MAPPING = {
-    "authorization_code": (
-        AbstractApplication.GRANT_AUTHORIZATION_CODE,
-        AbstractApplication.GRANT_OPENID_HYBRID,
-    ),
-    "password": (AbstractApplication.GRANT_PASSWORD,),
-    "client_credentials": (AbstractApplication.GRANT_CLIENT_CREDENTIALS,),
-    "refresh_token": (
-        AbstractApplication.GRANT_AUTHORIZATION_CODE,
-        AbstractApplication.GRANT_PASSWORD,
-        AbstractApplication.GRANT_CLIENT_CREDENTIALS,
-        AbstractApplication.GRANT_OPENID_HYBRID,
-    ),
-}
 
 Application = get_application_model()
 AccessToken = get_access_token_model()
@@ -64,6 +49,21 @@ IDToken = get_id_token_model()
 Grant = get_grant_model()
 RefreshToken = get_refresh_token_model()
 UserModel = get_user_model()
+
+GRANT_TYPE_MAPPING = {
+    "authorization_code": (
+        Application.GRANT_AUTHORIZATION_CODE,
+        Application.GRANT_OPENID_HYBRID,
+    ),
+    "password": (Application.GRANT_PASSWORD,),
+    "client_credentials": (Application.GRANT_CLIENT_CREDENTIALS,),
+    "refresh_token": (
+        Application.GRANT_AUTHORIZATION_CODE,
+        Application.GRANT_PASSWORD,
+        Application.GRANT_CLIENT_CREDENTIALS,
+        Application.GRANT_OPENID_HYBRID,
+    ),
+}
 
 
 class OAuth2Validator(RequestValidator):
