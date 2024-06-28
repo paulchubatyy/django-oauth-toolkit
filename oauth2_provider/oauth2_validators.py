@@ -278,7 +278,7 @@ class OAuth2Validator(RequestValidator):
 
         self._load_application(request.client_id, request)
         if request.client:
-            return request.client.client_type == AbstractApplication.CLIENT_CONFIDENTIAL
+            return request.client.client_type == Application.CLIENT_CONFIDENTIAL
 
         return super().client_authentication_required(request, *args, **kwargs)
 
@@ -306,7 +306,7 @@ class OAuth2Validator(RequestValidator):
         proceed only if the client exists and is not of type "Confidential".
         """
         if self._load_application(client_id, request) is not None:
-            return request.client.client_type != AbstractApplication.CLIENT_CONFIDENTIAL
+            return request.client.client_type != Application.CLIENT_CONFIDENTIAL
         return False
 
     def confirm_redirect_uri(self, client_id, code, redirect_uri, client, *args, **kwargs):
@@ -493,19 +493,19 @@ class OAuth2Validator(RequestValidator):
         rfc:`8.4`, so validate the response_type only if it matches "code" or "token"
         """
         if response_type == "code":
-            return client.allows_grant_type(AbstractApplication.GRANT_AUTHORIZATION_CODE)
+            return client.allows_grant_type(Application.GRANT_AUTHORIZATION_CODE)
         elif response_type == "token":
-            return client.allows_grant_type(AbstractApplication.GRANT_IMPLICIT)
+            return client.allows_grant_type(Application.GRANT_IMPLICIT)
         elif response_type == "id_token":
-            return client.allows_grant_type(AbstractApplication.GRANT_IMPLICIT)
+            return client.allows_grant_type(Application.GRANT_IMPLICIT)
         elif response_type == "id_token token":
-            return client.allows_grant_type(AbstractApplication.GRANT_IMPLICIT)
+            return client.allows_grant_type(Application.GRANT_IMPLICIT)
         elif response_type == "code id_token":
-            return client.allows_grant_type(AbstractApplication.GRANT_OPENID_HYBRID)
+            return client.allows_grant_type(Application.GRANT_OPENID_HYBRID)
         elif response_type == "code token":
-            return client.allows_grant_type(AbstractApplication.GRANT_OPENID_HYBRID)
+            return client.allows_grant_type(Application.GRANT_OPENID_HYBRID)
         elif response_type == "code id_token token":
-            return client.allows_grant_type(AbstractApplication.GRANT_OPENID_HYBRID)
+            return client.allows_grant_type(Application.GRANT_OPENID_HYBRID)
         else:
             return False
 
@@ -863,7 +863,7 @@ class OAuth2Validator(RequestValidator):
             "alg": request.client.algorithm,
         }
         # RS256 consumers expect a kid in the header for verifying the token
-        if request.client.algorithm == AbstractApplication.RS256_ALGORITHM:
+        if request.client.algorithm == Application.RS256_ALGORITHM:
             header["kid"] = request.client.jwk_key.thumbprint()
 
         jwt_token = jwt.JWT(
