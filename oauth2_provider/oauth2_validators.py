@@ -668,7 +668,7 @@ class OAuth2Validator(RequestValidator):
             expires=expires,
             token=token["access_token"],
             id_token=id_token,
-            application=request.client,
+            application=request.client.pk,
             source_refresh_token=source_refresh_token,
         )
 
@@ -676,7 +676,7 @@ class OAuth2Validator(RequestValidator):
         if not expires:
             expires = timezone.now() + timedelta(seconds=oauth2_settings.AUTHORIZATION_CODE_EXPIRE_SECONDS)
         return Grant.objects.create(
-            application=request.client,
+            application=request.client.pk,
             user=request.user,
             code=code["code"],
             expires=expires,
@@ -690,7 +690,7 @@ class OAuth2Validator(RequestValidator):
 
     def _create_refresh_token(self, request, refresh_token_code, access_token):
         return RefreshToken.objects.create(
-            user=request.user, token=refresh_token_code, application=request.client, access_token=access_token
+            user=request.user, token=refresh_token_code, application=request.client.pk, access_token=access_token
         )
 
     def revoke_token(self, token, token_type_hint, request, *args, **kwargs):
@@ -779,7 +779,7 @@ class OAuth2Validator(RequestValidator):
             scope=scopes,
             expires=expires,
             jti=jti,
-            application=request.client,
+            application=request.client.pk,
         )
         return id_token
 
