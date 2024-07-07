@@ -25,7 +25,7 @@ class IntrospectTokenView(ClientProtectedScopedResourceView):
     def get_token_response(token_value=None):
         try:
             token = (
-                get_access_token_model().objects.select_related("user", "application").get(token=token_value)
+                get_access_token_model().objects.select_related("user").get(token=token_value)
             )
         except ObjectDoesNotExist:
             return JsonResponse({"active": False}, status=200)
@@ -36,8 +36,6 @@ class IntrospectTokenView(ClientProtectedScopedResourceView):
                     "scope": token.scope,
                     "exp": int(calendar.timegm(token.expires.timetuple())),
                 }
-                if token.application:
-                    data["client_id"] = token.application.client_id
                 if token.user:
                     data["username"] = token.user.get_username()
                 return JsonResponse(data)
