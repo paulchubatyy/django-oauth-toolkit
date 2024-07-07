@@ -313,14 +313,14 @@ class OAuth2Validator(RequestValidator):
         """
         Ensure the redirect_uri is listed in the Application instance redirect_uris field
         """
-        grant = Grant.objects.get(code=code, application=client)
+        grant = Grant.objects.get(code=code, application=client.pk)
         return grant.redirect_uri_allowed(redirect_uri)
 
     def invalidate_authorization_code(self, client_id, code, request, *args, **kwargs):
         """
         Remove the temporary grant used to swap the authorization token
         """
-        grant = Grant.objects.get(code=code, application=request.client)
+        grant = Grant.objects.get(code=code, application=request.client.pk)
         grant.delete()
 
     def validate_client_id(self, client_id, request, *args, **kwargs):
@@ -535,11 +535,11 @@ class OAuth2Validator(RequestValidator):
         return oauth2_settings.PKCE_REQUIRED
 
     def get_code_challenge(self, code, request):
-        grant = Grant.objects.get(code=code, application=request.client)
+        grant = Grant.objects.get(code=code, application=request.client.pk)
         return grant.code_challenge or None
 
     def get_code_challenge_method(self, code, request):
-        grant = Grant.objects.get(code=code, application=request.client)
+        grant = Grant.objects.get(code=code, application=request.client.pk)
         return grant.code_challenge_method or None
 
     def save_authorization_code(self, client_id, code, request, *args, **kwargs):
