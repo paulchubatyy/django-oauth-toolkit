@@ -462,7 +462,7 @@ class OAuth2Validator(RequestValidator):
             return False
 
     def _load_access_token(self, token):
-        return AccessToken.objects.select_related("application", "user").filter(token=token).first()
+        return AccessToken.objects.select_related("user").filter(token=token).first()
 
     def validate_code(self, client_id, code, client, request, *args, **kwargs):
         try:
