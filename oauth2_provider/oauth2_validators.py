@@ -768,7 +768,7 @@ class OAuth2Validator(RequestValidator):
         request.refresh_token = rt.token
         # Temporary store RefreshToken instance to be reused by get_original_scopes and save_bearer_token.
         request.refresh_token_instance = rt
-        return rt.application == client
+        return rt.application == client.pk
 
     @transaction.atomic
     def _save_id_token(self, jti, request, expires, *args, **kwargs):
